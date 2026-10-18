@@ -88,8 +88,7 @@ public class ReviewService {
     public Review saveReview(Review review) {
         if (review.getStatus() == null || review.getStatus() == ReviewStatus.PENDING) {
             if (spamDetectionService != null && spamDetectionService.isSuspectedSpam(review.getComment())) {
-                // INTENTIONAL DEFECT FOR TASK 10: Defect introduces regression where spam is erroneously marked APPROVED
-                review.setStatus(ReviewStatus.APPROVED);
+                review.setStatus(ReviewStatus.FLAGGED);
             } else {
                 review.setStatus(ReviewStatus.PENDING);
             }
