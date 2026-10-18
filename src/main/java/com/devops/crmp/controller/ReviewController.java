@@ -76,6 +76,23 @@ public class ReviewController {
         return "redirect:/reviews";
     }
 
+    @PostMapping("/{id}/moderate")
+    public String moderateReview(@PathVariable("id") Long id,
+                                 @RequestParam("status") ReviewStatus status,
+                                 @RequestParam(value = "moderatorNotes", required = false) String moderatorNotes,
+                                 @RequestParam(value = "moderatedBy", required = false, defaultValue = "Rushikesh Gawade (Lead Moderator)") String moderatedBy,
+                                 RedirectAttributes redirectAttributes) {
+        boolean updated = reviewService.updateStatusWithNotes(id, status, moderatorNotes, moderatedBy);
+        if (updated) {
+            redirectAttributes.addFlashAttribute("statusMessage", 
+                    "Review #" + id + " triaged to " + status + " with moderation audit recorded.");
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", 
+                    "Failed to moderate Review #" + id + ".");
+        }
+        return "redirect:/reviews";
+    }
+
     // REST APIs for automated verification
     @GetMapping("/api/all")
     @ResponseBody
