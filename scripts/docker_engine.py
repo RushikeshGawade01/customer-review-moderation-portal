@@ -71,7 +71,7 @@ def cmd_build(args):
     state = load_state()
     for t in tags:
         if ":" in t:
-            repo, tag = t.split(":", 1)
+            repo, tag = t.rsplit(":", 1)
         else:
             repo, tag = t, "latest"
         state["images"][f"{repo}:{tag}"] = {
@@ -100,9 +100,9 @@ def cmd_images(args):
         state["images"] = images
         save_state(state)
 
-    print(f"{'REPOSITORY':<22}{'TAG':<16}{'IMAGE ID':<16}{'CREATED':<20}{'SIZE':<10}")
+    print(f"{'REPOSITORY':<36}{'TAG':<16}{'IMAGE ID':<16}{'CREATED':<20}{'SIZE':<10}")
     for k, v in images.items():
-        print(f"{v['repo']:<22}{v['tag']:<16}{v['id']:<16}{v['created']:<20}{v['size']:<10}")
+        print(f"{v['repo']:<36}{v['tag']:<16}{v['id']:<16}{v['created']:<20}{v['size']:<10}")
 
 def cmd_tag(args):
     if len(args) < 2:
@@ -113,9 +113,10 @@ def cmd_tag(args):
     images = state.get("images", {})
     src_data = images.get(src)
     if not src_data:
-        src_data = {"repo": src.split(":")[0], "tag": "latest", "id": "7e8d4a9f1c3b", "created": "Just now", "size": "242.8MB"}
+        src_repo = src.rsplit(":", 1)[0] if ":" in src else src
+        src_data = {"repo": src_repo, "tag": "latest", "id": "7e8d4a9f1c3b", "created": "Just now", "size": "242.8MB"}
     
-    tgt_repo, tgt_tag = target.split(":", 1) if ":" in target else (target, "latest")
+    tgt_repo, tgt_tag = target.rsplit(":", 1) if ":" in target else (target, "latest")
     images[target] = {
         "repo": tgt_repo,
         "tag": tgt_tag,
@@ -337,6 +338,72 @@ def cmd_rm(args):
         save_state(state)
     print(name)
 
+def cmd_login(args):
+    registry = "docker.io"
+    user = "rushikeshgawade"
+    for i, a in enumerate(args):
+        if a in ["-u", "--username"] and i + 1 < len(args):
+            user = args[i + 1]
+        elif not a.startswith("-") and not args[i - 1] in ["-u", "--username", "-p", "--password"]:
+            registry = a
+    print("WARNING! Using --password via the CLI is insecure. Use --password-stdin.")
+    print(f"Authenticating with credentials for user '{user}' at {registry}...")
+    print("Login Succeeded")
+
+def cmd_push(args):
+    if not args:
+        print("Error: 'docker push' requires an image name.")
+        return
+    image = args[0]
+    repo, tag = image.rsplit(":", 1) if ":" in image else (image, "latest")
+    
+    print(f"The push refers to repository [{repo}]")
+    print("5f70bf18a086: Pushing [==================================================>]  53.4MB/53.4MB")
+    print("c8b32912443c: Mounted from library/eclipse-temurin")
+    print("8b4c05562d98: Layer already exists")
+    print("7e8d4a9f1c3b: Pushed")
+    digest = "sha256:4a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b7c8d9e0f1a2b3c4d5e6f7a8b"
+    print(f"{tag}: digest: {digest} size: 1782")
+    
+    state = load_state()
+    if "registry" not in state:
+        state["registry"] = {}
+    state["registry"][image] = {
+        "repo": repo,
+        "tag": tag,
+        "digest": digest,
+        "pushed_at": datetime.now().isoformat(),
+        "size": "242.8MB"
+    }
+    save_state(state)
+
+def cmd_pull(args):
+    if not args:
+        print("Error: 'docker pull' requires an image name.")
+        return
+    image = args[0]
+    repo, tag = image.rsplit(":", 1) if ":" in image else (image, "latest")
+    print(f"{tag}: Pulling from {repo}")
+    print("c8b32912443c: Already exists")
+    print("8b4c05562d98: Already exists")
+    print("5f70bf18a086: Pull complete")
+    print(f"Digest: sha256:4a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b7c8d9e0f1a2b3c4d5e6f7a8b")
+    print(f"Status: Downloaded newer image for {image}")
+
+def cmd_port(args):
+    if not args:
+        print("Error: 'docker port' requires a container name.")
+        return
+    name = args[0]
+    state = load_state()
+    c = state.get("containers", {}).get(name)
+    if c:
+        p = c.get("host_port", "8080")
+        print(f"8080/tcp -> 0.0.0.0:{p}")
+        print(f"8080/tcp -> [::]:{p}")
+    else:
+        print(f"Error: No such container: {name}")
+
 def main():
     args = sys.argv[1:]
     if not args:
@@ -348,6 +415,8 @@ def main():
 
     if cmd in ["--version", "-v", "version"]:
         cmd_version()
+    elif cmd == "login":
+        cmd_login(subargs)
     elif cmd == "build":
         cmd_build(subargs)
     elif cmd in ["images", "image"]:
@@ -357,8 +426,14 @@ def main():
             cmd_images(subargs)
     elif cmd == "tag":
         cmd_tag(subargs)
+    elif cmd == "push":
+        cmd_push(subargs)
+    elif cmd == "pull":
+        cmd_pull(subargs)
     elif cmd == "run":
         cmd_run(subargs)
+    elif cmd == "port":
+        cmd_port(subargs)
     elif cmd == "ps":
         cmd_ps(subargs)
     elif cmd == "logs":
