@@ -15,6 +15,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findByStatus(ReviewStatus status);
 
     @Query("SELECT r FROM Review r WHERE " +
+           "LOWER(r.productId) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
            "LOWER(r.productName) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
            "LOWER(r.reviewerName) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
            "LOWER(r.reviewTitle) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
@@ -22,6 +23,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Review> searchReviews(@Param("query") String query);
 
     @Query("SELECT r FROM Review r WHERE r.status = :status AND (" +
+           "LOWER(r.productId) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
            "LOWER(r.productName) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
            "LOWER(r.reviewerName) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
            "LOWER(r.reviewTitle) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
