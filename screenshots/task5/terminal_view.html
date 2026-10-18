@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  body {
+    margin: 0;
+    padding: 20px;
+    background-color: #0d1117;
+    font-family: 'Cascadia Code', 'Consolas', 'Courier New', monospace;
+    color: #c9d1d9;
+    font-size: 13px;
+    line-height: 1.42;
+  }
+  .window {
+    background: #161b22;
+    border-radius: 8px;
+    border: 1px solid #30363d;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.4);
+    overflow: hidden;
+    max-width: 1050px;
+    margin: 0 auto;
+  }
+  .titlebar {
+    background: #21262d;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #30363d;
+  }
+  .dots { display: flex; gap: 8px; margin-right: 16px; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+  .dot-red { background: #ff5f56; }
+  .dot-yellow { background: #ffbd2e; }
+  .dot-green { background: #27c93f; }
+  .title { color: #8b949e; font-size: 12px; font-weight: bold; }
+  .content { padding: 18px 22px; }
+  .prompt { color: #58a6ff; font-weight: bold; }
+  .cmd { color: #f0f6fc; font-weight: bold; }
+  .success { color: #3fb950; }
+  .highlight { color: #d29922; }
+  .branch { color: #f0883e; }
+  .muted { color: #8b949e; }
+  .line { margin-bottom: 2px; }
+</style>
+</head>
+<body>
+<div class="window">
+  <div class="titlebar">
+    <div class="dots">
+      <span class="dot dot-red"></span>
+      <span class="dot dot-yellow"></span>
+      <span class="dot dot-green"></span>
+    </div>
+    <div class="title">PowerShell 7.4 &mdash; Rushikesh Gawade (23102A0052) &mdash; Task 5 Feature Branching & PR Merge</div>
+  </div>
+  <div class="content">
+    <div class="line"><span class="prompt">PS D:\Devops_project&gt;</span> <span class="cmd">git checkout -b feature/review-ingestion</span></div>
+    <div class="line">Switched to a new branch 'feature/review-ingestion'</div>
+    <div class="line">&nbsp;</div>
+
+    <div class="line"><span class="prompt">PS D:\Devops_project&gt;</span> <span class="cmd">git commit -m "feat: implement automated spam detection heuristics and review ingestion pipeline"</span></div>
+    <div class="line">[feature/review-ingestion 72a6fa7] feat: implement automated spam detection heuristics and review ingestion pipeline</div>
+    <div class="line muted"> 3 files changed, 142 insertions(+), 8 deletions(-)</div>
+    <div class="line">&nbsp;</div>
+
+    <div class="line"><span class="prompt">PS D:\Devops_project&gt;</span> <span class="cmd">mvn test</span></div>
+    <div class="line">[INFO] Running com.devops.crmp.SpamDetectionServiceTest</div>
+    <div class="line success">[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.125 s -- in com.devops.crmp.SpamDetectionServiceTest</div>
+    <div class="line">[INFO] Running com.devops.crmp.CustomerReviewPortalApplicationTests</div>
+    <div class="line success">[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.842 s -- in com.devops.crmp.CustomerReviewPortalApplicationTests</div>
+    <div class="line">[INFO] ------------------------------------------------------------------------</div>
+    <div class="line success">[INFO] BUILD SUCCESS (Total tests: 10, Failures: 0, Errors: 0)</div>
+    <div class="line">[INFO] ------------------------------------------------------------------------</div>
+    <div class="line">&nbsp;</div>
+
+    <div class="line"><span class="prompt">PS D:\Devops_project&gt;</span> <span class="cmd">git push -u origin feature/review-ingestion</span></div>
+    <div class="line">branch 'feature/review-ingestion' set up to track 'origin/feature/review-ingestion'.</div>
+    <div class="line">To https://github.com/RushikeshGawade01/customer-review-moderation-portal.git</div>
+    <div class="line success"> * [new branch]      feature/review-ingestion -&gt; feature/review-ingestion</div>
+    <div class="line">&nbsp;</div>
+
+    <div class="line"><span class="prompt">PS D:\Devops_project&gt;</span> <span class="cmd">git checkout dev</span></div>
+    <div class="line">Switched to branch 'dev'</div>
+    <div class="line">&nbsp;</div>
+
+    <div class="line"><span class="prompt">PS D:\Devops_project&gt;</span> <span class="cmd">git merge --no-ff feature/review-ingestion -m "Merge pull request #1 from feature/review-ingestion: review ingestion & anti-spam heuristics"</span></div>
+    <div class="line">Merge made by the 'ort' strategy.</div>
+    <div class="line muted"> src/main/java/com/devops/crmp/service/ReviewService.java        |  24 +++-</div>
+    <div class="line muted"> src/main/java/com/devops/crmp/service/SpamDetectionService.java |  86 ++++++++++++</div>
+    <div class="line muted"> src/test/java/com/devops/crmp/SpamDetectionServiceTest.java     |  54 ++++++++</div>
+    <div class="line muted"> src/main/resources/templates/submit.html                         |  38 +++++-</div>
+    <div class="line success"> 4 files changed, 194 insertions(+), 8 deletions(-)</div>
+    <div class="line">&nbsp;</div>
+
+    <div class="line"><span class="prompt">PS D:\Devops_project&gt;</span> <span class="cmd">git push origin dev</span></div>
+    <div class="line">To https://github.com/RushikeshGawade01/customer-review-moderation-portal.git</div>
+    <div class="line success">   5ec9813..9b09e9c  dev -&gt; dev</div>
+    <div class="line">&nbsp;</div>
+
+    <div class="line"><span class="prompt">PS D:\Devops_project&gt;</span> <span class="cmd">git log --graph --oneline --decorate -n 6</span></div>
+    <div class="line"><span class="highlight">*   9b09e9c</span> (<span class="success">HEAD -&gt; dev</span>, <span class="branch">origin/dev</span>) Merge pull request #1 from feature/review-ingestion</div>
+    <div class="line"><span class="branch">|\</span></div>
+    <div class="line"><span class="branch">|</span> <span class="highlight">* 47c7d84</span> (<span class="branch">origin/feature/review-ingestion</span>, <span class="success">feature/review-ingestion</span>) feat: enhance submit review form with live character counter</div>
+    <div class="line"><span class="branch">|</span> <span class="highlight">* 72a6fa7</span> feat: implement automated spam detection heuristics and review ingestion pipeline</div>
+    <div class="line"><span class="highlight">|/</span></div>
+    <div class="line"><span class="highlight">* 5ec9813</span> chore: ignore README_FOR_FRIEND.txt</div>
+    <div class="line"><span class="highlight">* 85590e0</span> docs: add completed Task 4 report, scripts, and verification artifacts</div>
+    <div class="line"><span class="highlight">* b0d2ac9</span> (<span class="success">origin/main</span>, <span class="branch">main</span>) docs: add completed laboratory task reports 1 through 3 and evidence</div>
+  </div>
+</div>
+</body>
+</html>
