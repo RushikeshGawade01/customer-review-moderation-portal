@@ -1,0 +1,49 @@
+---
+# ==============================================================================
+# Ansible Automated Rollback Playbook for CRMP
+# Student: Rushikesh Gawade (Roll No: 23102A0052) | Evaluator: Dr. Snehal Andhare
+# Subject: DevOps Lab - Task 13 & 14 (Automated Rollback & Idempotency)
+# ==============================================================================
+
+- name: "Automated Rollback to Previous Stable Container Release"
+  hosts: crmp_nodes
+  become: yes
+  vars_files:
+    - vars/main.yml
+  vars:
+    rollback_tag: "v1.0.0"
+
+  tasks:
+    - name: "Rollback Task 1: Stop and Remove Defective Container"
+      community.docker.docker_container:
+        name: "{{ docker_container_name }}"
+        state: absent
+
+    - name: "Rollback Task 2: Launch Prior Stable Container Tag ({{ rollback_tag }})"
+      community.docker.docker_container:
+        name: "{{ docker_container_name }}"
+        image: "{{ docker_image_name }}:{{ rollback_tag }}"
+        state: started
+        restart_policy: always
+        ports:
+          - "{{ app_port }}:8080"
+        env:
+          SPRING_PROFILES_ACTIVE: "{{ app_env }}"
+          SERVER_PORT: "8080"
+
+    - name: "Rollback Task 3: Validate Restored Application Health via Actuator"
+      ansible.builtin.uri:
+        url: "{{ health_check_endpoint }}"
+        method: GET
+        status_code: 200
+        return_content: yes
+      register: rollback_health
+      until: rollback_health.status == 200 and 'UP' in rollback_health.content
+      retries: 5
+      delay: 3
+
+    - name: "Rollback Task 4: Log Rollback Recovery Event"
+      ansible.builtin.debug:
+        msg: >-
+          [ROLLBACK SUCCESS] Target host {{ inventory_hostname }} restored to
+          image {{ docker_image_name }}:{{ rollback_tag }} with health status UP.

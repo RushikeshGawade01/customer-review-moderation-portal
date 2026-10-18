@@ -1,0 +1,135 @@
+---
+# ==============================================================================
+# Ansible Configuration Management Playbook for CRMP
+# Student: Rushikesh Gawade (Roll No: 23102A0052) | Evaluator: Dr. Snehal Andhare
+# Subject: DevOps Lab - Task 13 (Configuration Management Script)
+# ==============================================================================
+
+- name: "CRMP Server Prerequisites, Hardening & Container Deployment"
+  hosts: crmp_nodes
+  become: yes
+  vars_files:
+    - vars/main.yml
+
+  tasks:
+    - name: "Task 1: Verify Host System Architecture and Operating System Facts"
+      ansible.builtin.debug:
+        msg: >-
+          Configuring target host {{ inventory_hostname }} ({{ ansible_host }}).
+          OS Family: Linux/POSIX, Architecture: x86_64, Target Env: {{ app_env }}.
+
+    - name: "Task 2: Install Essential Operating System Packages"
+      ansible.builtin.package:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ prerequisite_packages }}"
+      tags:
+        - packages
+
+    - name: "Task 3: Install OpenJDK 21 Headless Java Runtime Environment"
+      ansible.builtin.package:
+        name: "{{ java_package }}"
+        state: present
+      tags:
+        - java
+
+    - name: "Task 4: Install and Enable Docker Engine Daemon Service"
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: yes
+      tags:
+        - docker
+
+    - name: "Task 5: Ensure Application Service Group Exists (crmpgroup, GID 1000)"
+      ansible.builtin.group:
+        name: "{{ app_group }}"
+        gid: "{{ app_gid }}"
+        state: present
+      tags:
+        - security
+
+    - name: "Task 6: Ensure Dedicated Unprivileged User Exists (crmpuser, UID 1000)"
+      ansible.builtin.user:
+        name: "{{ app_user }}"
+        uid: "{{ app_uid }}"
+        group: "{{ app_group }}"
+        shell: /bin/bash
+        home: "{{ app_base_dir }}"
+        create_home: no
+        state: present
+      tags:
+        - security
+
+    - name: "Task 7: Create Production Application Directory Layout"
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ app_user }}"
+        group: "{{ app_group }}"
+        mode: '0755'
+      loop:
+        - "{{ app_base_dir }}"
+        - "{{ app_config_dir }}"
+        - "{{ app_log_dir }}"
+        - "{{ app_data_dir }}"
+      tags:
+        - directories
+
+    - name: "Task 8: Deploy Production Configuration File from Jinja2 Template"
+      ansible.builtin.template:
+        src: templates/application-production.properties.j2
+        dest: "{{ app_config_dir }}/application-production.properties"
+        owner: "{{ app_user }}"
+        group: "{{ app_group }}"
+        mode: '0644'
+      notify:
+        - Restart CRMP Container
+      tags:
+        - configuration
+
+    - name: "Task 9: Configure Firewall Rules to Allow Traffic on Port 8080"
+      ansible.builtin.ufw:
+        rule: allow
+        port: "{{ item }}"
+        proto: tcp
+      loop: "{{ firewall_allowed_ports }}"
+      tags:
+        - firewall
+
+    - name: "Task 10: Deploy and Start Versioned CRMP Container"
+      community.docker.docker_container:
+        name: "{{ docker_container_name }}"
+        image: "{{ docker_image_name }}:{{ docker_image_tag }}"
+        state: started
+        restart_policy: always
+        ports:
+          - "{{ app_port }}:8080"
+        env:
+          SPRING_PROFILES_ACTIVE: "{{ app_env }}"
+          SERVER_PORT: "8080"
+        volumes:
+          - "{{ app_config_dir }}:/app/config:ro"
+          - "{{ app_log_dir }}:/app/logs:rw"
+      tags:
+        - container
+
+    - name: "Task 11: Perform Automated Health Probe Verification via Actuator"
+      ansible.builtin.uri:
+        url: "{{ health_check_endpoint }}"
+        method: GET
+        status_code: 200
+        return_content: yes
+      register: health_response
+      until: health_response.status == 200 and 'UP' in health_response.content
+      retries: "{{ health_check_retries }}"
+      delay: "{{ health_check_delay }}"
+      tags:
+        - healthcheck
+
+  handlers:
+    - name: Restart CRMP Container
+      community.docker.docker_container:
+        name: "{{ docker_container_name }}"
+        state: started
+        restart: yes

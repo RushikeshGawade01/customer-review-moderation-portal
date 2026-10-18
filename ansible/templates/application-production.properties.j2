@@ -1,0 +1,34 @@
+# ==============================================================================
+# Production Configuration for Customer Review Moderation Portal (CRMP)
+# Managed by Ansible Playbook - Do Not Edit Manually on Host
+# Student: Rushikesh Gawade (23102A0052) | Evaluator: Dr. Snehal Andhare
+# ==============================================================================
+
+# Server Network Configuration
+server.port={{ app_port }}
+server.address=0.0.0.0
+server.servlet.context-path=/
+
+# Spring Application Metadata
+spring.application.name={{ app_name }}
+spring.profiles.active={{ app_env | default('production') }}
+
+# Database Configuration (In-Memory H2 with Production Schema)
+spring.datasource.url=jdbc:h2:mem:crmpdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=false
+
+# Actuator Health & Metrics Telemetry
+management.endpoints.web.exposure.include=health,info,metrics
+management.endpoint.health.show-details=always
+management.endpoint.health.probes.enabled=true
+
+# Logging Subsystem
+logging.file.path={{ app_log_dir }}
+logging.file.name={{ app_log_dir }}/crmp-application.log
+logging.level.root=INFO
+logging.level.com.devops.crmp=DEBUG
