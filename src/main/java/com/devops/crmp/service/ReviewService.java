@@ -14,10 +14,12 @@ import java.util.*;
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
+    private final SpamDetectionService spamDetectionService;
 
     @Autowired
-    public ReviewService(ReviewRepository reviewRepository) {
+    public ReviewService(ReviewRepository reviewRepository, SpamDetectionService spamDetectionService) {
         this.reviewRepository = reviewRepository;
+        this.spamDetectionService = spamDetectionService;
     }
 
     @PostConstruct
@@ -84,8 +86,12 @@ public class ReviewService {
 
     @Transactional
     public Review saveReview(Review review) {
-        if (review.getStatus() == null) {
-            review.setStatus(ReviewStatus.PENDING);
+        if (review.getStatus() == null || review.getStatus() == ReviewStatus.PENDING) {
+            if (spamDetectionService != null && spamDetectionService.isSuspectedSpam(review.getComment())) {
+                review.setStatus(ReviewStatus.FLAGGED);
+            } else {
+                review.setStatus(ReviewStatus.PENDING);
+            }
         }
         return reviewRepository.save(review);
     }

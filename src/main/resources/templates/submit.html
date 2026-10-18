@@ -148,11 +148,18 @@
 
                             <!-- Detailed Comment -->
                             <div class="col-12">
-                                <label for="comment" class="form-label fw-bold small text-muted text-uppercase">Detailed Customer Feedback</label>
+                                <div class="d-flex justify-content-between">
+                                    <label for="comment" class="form-label fw-bold small text-muted text-uppercase">Detailed Customer Feedback</label>
+                                    <span class="small text-muted" id="charCounter"><span id="currentChars">0</span> / 2000 characters</span>
+                                </div>
                                 <textarea class="form-control" th:field="*{comment}" id="comment" rows="4" 
-                                          placeholder="Share details of your experience, performance, durability..." th:errorclass="is-invalid"></textarea>
+                                          placeholder="Share details of your experience, performance, durability..." th:errorclass="is-invalid"
+                                          oninput="document.getElementById('currentChars').innerText = this.value.length;"></textarea>
                                 <div class="invalid-feedback" th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}">
                                     Review comment must be at least 10 characters.
+                                </div>
+                                <div class="form-text small text-muted mt-1" id="spamDisclaimer">
+                                    <i class="bi bi-shield-lock me-1 text-primary"></i>All reviews are screened by our automated moderation engine for spam and profanity before publication.
                                 </div>
                             </div>
 
