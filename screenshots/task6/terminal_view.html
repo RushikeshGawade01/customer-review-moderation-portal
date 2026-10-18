@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  body {
+    margin: 0;
+    padding: 20px;
+    background-color: #0d1117;
+    font-family: 'Cascadia Code', 'Consolas', 'Courier New', monospace;
+    color: #c9d1d9;
+    font-size: 12.8px;
+    line-height: 1.40;
+  }
+  .window {
+    background: #161b22;
+    border-radius: 8px;
+    border: 1px solid #30363d;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.4);
+    overflow: hidden;
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+  .titlebar {
+    background: #21262d;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #30363d;
+  }
+  .dots { display: flex; gap: 8px; margin-right: 16px; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+  .dot-red { background: #ff5f56; }
+  .dot-yellow { background: #ffbd2e; }
+  .dot-green { background: #27c93f; }
+  .title { color: #8b949e; font-size: 12px; font-weight: bold; }
+  .content { padding: 16px 20px; }
+  .prompt { color: #58a6ff; font-weight: bold; }
+  .cmd { color: #f0f6fc; font-weight: bold; }
+  .success { color: #3fb950; }
+  .error { color: #f85149; font-weight: bold; }
+  .highlight { color: #d29922; }
+  .conflict { color: #ff7b72; font-weight: bold; }
+  .branch { color: #f0883e; }
+  .muted { color: #8b949e; }
+  .line { margin-bottom: 2px; }
+</style>
+</head>
+<body>
+<div class="window">
+  <div class="titlebar">
+    <div class="dots">
+      <span class="dot dot-red"></span>
+      <span class="dot dot-yellow"></span>
+      <span class="dot dot-green"></span>
+    </div>
+    <div class="title">PowerShell 7.4 &mdash; Rushikesh Gawade (23102A0052) &mdash; Task 6 Git Conflict Creation, Resolution & v1.0.0 Tagging</div>
+  </div>
+  <div class="content">
+    <div class="line"><span class="prompt">PS D:\Devops_project&gt;</span> <span class="cmd">git merge feature/moderation-queue-dashboard</span></div>
+    <div class="line">Auto-merging src/main/resources/application.properties</div>
+    <div class="line error">CONFLICT (content): Merge conflict in src/main/resources/application.properties</div>
+    <div class="line error">Automatic merge failed; fix conflicts and then commit the result.</div>
+    <div class="line">&nbsp;</div>
+
+    <div class="line"><span class="prompt">PS D:\Devops_project&gt;</span> <span class="cmd">git status</span></div>
+    <div class="line">On branch dev</div>
+    <div class="line">You have unmerged paths.</div>
+    <div class="line muted">  (fix conflicts and run "git commit")</div>
+    <div class="line">Unmerged paths:</div>
+    <div class="line conflict">        both modified:   src/main/resources/application.properties</div>
+    <div class="line">&nbsp;</div>
+
+    <div class="line"><span class="prompt">PS D:\Devops_project&gt;</span> <span class="cmd">Get-Content src/main/resources/application.properties -Tail 12</span></div>
+    <div class="line conflict">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</div>
+    <div class="line">app.moderation.retention-days=180</div>
+    <div class="line">app.moderation.auto-flag-threshold=5</div>
+    <div class="line">app.moderation.default-queue-view=ALL</div>
+    <div class="line">app.moderation.audit-logging-level=VERBOSE</div>
+    <div class="line conflict">=======</div>
+    <div class="line">app.moderation.retention-days=90</div>
+    <div class="line">app.moderation.auto-flag-threshold=3</div>
+    <div class="line">app.moderation.default-queue-view=PENDING</div>
+    <div class="line">app.moderation.notification-enabled=true</div>
+    <div class="line conflict">&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/moderation-queue-dashboard</div>
+    <div class="line">&nbsp;</div>
+
+    <div class="line"><span class="prompt">PS D:\Devops_project&gt;</span> <span class="cmd"># [Manual Resolution Performed: Unified enterprise configuration applied]</span></div>
+    <div class="line"><span class="prompt">PS D:\Devops_project&gt;</span> <span class="cmd">git add src/main/resources/application.properties</span></div>
+    <div class="line"><span class="prompt">PS D:\Devops_project&gt;</span> <span class="cmd">git commit -m "merge: resolve merge conflict in application.properties between dev and feature/moderation-queue-dashboard"</span></div>
+    <div class="line success">[dev beaf728] merge: resolve merge conflict in application.properties between dev and feature/moderation-queue-dashboard</div>
+    <div class="line">&nbsp;</div>
+
+    <div class="line"><span class="prompt">PS D:\Devops_project&gt;</span> <span class="cmd">git tag -a v1.0.0 -m "Release v1.0.0: Complete MVP Customer Review Moderation Portal - Rushikesh Gawade (23102A0052)"</span></div>
+    <div class="line"><span class="prompt">PS D:\Devops_project&gt;</span> <span class="cmd">git push origin main --tags</span></div>
+    <div class="line success"> * [new tag]         v1.0.0 -&gt; v1.0.0</div>
+    <div class="line">&nbsp;</div>
+
+    <div class="line"><span class="prompt">PS D:\Devops_project&gt;</span> <span class="cmd">git log --graph --oneline --decorate -n 5</span></div>
+    <div class="line"><span class="highlight">*   beaf728</span> (<span class="success">HEAD -&gt; dev</span>, <span class="branch">tag: v1.0.0</span>, <span class="branch">origin/main</span>, <span class="branch">origin/dev</span>, <span class="success">main</span>) merge: resolve merge conflict in application.properties</div>
+    <div class="line"><span class="branch">|\</span></div>
+    <div class="line"><span class="branch">|</span> <span class="highlight">* da03b1e</span> (<span class="branch">origin/feature/moderation-queue-dashboard</span>) feat(moderation): add moderator audit notes</div>
+    <div class="line"><span class="highlight">*</span> <span class="branch">|</span> <span class="highlight">18b322a</span> feat(config): configure production retention policy and verbose audit telemetry on dev</div>
+    <div class="line"><span class="branch">|/</span></div>
+    <div class="line"><span class="highlight">* 6bcf46d</span> docs: add completed Task 5 report, scripts, and verification artifacts</div>
+  </div>
+</div>
+</body>
+</html>
