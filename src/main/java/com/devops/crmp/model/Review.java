@@ -52,6 +52,15 @@ public class Review {
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @Column(length = 1000)
+    private String moderatorNotes;
+
+    @Column
+    private LocalDateTime moderatedAt;
+
+    @Column
+    private String moderatedBy;
+
     public Review() {
     }
 
@@ -147,5 +156,29 @@ public class Review {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getModeratorNotes() {
+        return moderatorNotes;
+    }
+
+    public void setModeratorNotes(String moderatorNotes) {
+        this.moderatorNotes = moderatorNotes;
+    }
+
+    public LocalDateTime getModeratedAt() {
+        return moderatedAt;
+    }
+
+    public void setModeratedAt(LocalDateTime moderatedAt) {
+        this.moderatedAt = moderatedAt;
+    }
+
+    public String getModeratedBy() {
+        return moderatedBy;
+    }
+
+    public void setModeratedBy(String moderatedBy) {
+        this.moderatedBy = moderatedBy;
     }
 }

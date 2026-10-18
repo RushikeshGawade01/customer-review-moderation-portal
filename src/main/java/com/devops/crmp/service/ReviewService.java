@@ -98,10 +98,20 @@ public class ReviewService {
 
     @Transactional
     public boolean updateStatus(Long id, ReviewStatus newStatus) {
+        return updateStatusWithNotes(id, newStatus, null, "Rushikesh Gawade (Moderator)");
+    }
+
+    @Transactional
+    public boolean updateStatusWithNotes(Long id, ReviewStatus newStatus, String notes, String moderator) {
         Optional<Review> opt = reviewRepository.findById(id);
         if (opt.isPresent()) {
             Review r = opt.get();
             r.setStatus(newStatus);
+            if (notes != null && !notes.trim().isEmpty()) {
+                r.setModeratorNotes(notes.trim());
+            }
+            r.setModeratedBy(moderator != null && !moderator.trim().isEmpty() ? moderator.trim() : "Rushikesh Gawade (Moderator)");
+            r.setModeratedAt(java.time.LocalDateTime.now());
             reviewRepository.save(r);
             return true;
         }

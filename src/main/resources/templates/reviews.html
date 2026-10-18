@@ -162,6 +162,9 @@
                                 <span th:if="${r.status.name() == 'APPROVED'}" class="badge badge-approved px-2 py-1" th:id="'statusBadge-' + ${r.id}">APPROVED</span>
                                 <span th:if="${r.status.name() == 'REJECTED'}" class="badge badge-rejected px-2 py-1" th:id="'statusBadge-' + ${r.id}">REJECTED</span>
                                 <span th:if="${r.status.name() == 'FLAGGED'}" class="badge badge-flagged px-2 py-1" th:id="'statusBadge-' + ${r.id}">FLAGGED</span>
+                                <div th:if="${r.moderatorNotes}" class="mt-1" style="font-size: 0.75rem;">
+                                    <span class="badge bg-secondary bg-opacity-10 text-secondary border" th:text="${r.moderatorNotes}">Audit Note</span>
+                                </div>
                             </td>
                             <td class="text-end">
                                 <div class="btn-group btn-group-sm">
