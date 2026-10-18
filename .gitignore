@@ -1,0 +1,36 @@
+# Compiled Java & Maven Artifacts
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+
+# IDE & Editor Configuration
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+*.sublime-project
+*.sublime-workspace
+
+# Temporary & Lock Files
+~$*.docx
+*.tmp
+*.bak
+*.swp
+*~
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# Log files
+*.log
+logs/
+
+# Node / Scratch files
+scratch/
