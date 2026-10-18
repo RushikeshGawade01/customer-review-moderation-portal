@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRMP - Customer Review Moderation Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        body { background-color: #f8fafc; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+        .navbar-brand { font-weight: 700; letter-spacing: -0.5px; }
+        .kpi-card { border: none; border-radius: 12px; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.06); }
+        .badge-pending { background-color: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+        .badge-approved { background-color: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+        .badge-rejected { background-color: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+        .badge-flagged { background-color: #ede9fe; color: #5b21b6; border: 1px solid #c4b5fd; }
+        .star-rating { color: #f59e0b; }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3 shadow-sm">
+        <div class="container">
+            <a class="navbar-brand text-primary fw-bold" href="/" id="navBrand">
+                <i class="bi bi-shield-check text-info me-2"></i>ReviewModeration<span class="text-white">Portal</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active fw-semibold" href="/" id="navDashboardLink">
+                            <i class="bi bi-speedometer2 me-1"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-semibold" href="/reviews" id="navModerationQueueLink">
+                            <i class="bi bi-card-checklist me-1"></i> Moderation Queue
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-semibold" href="/reviews/submit" id="navSubmitReviewLink">
+                            <i class="bi bi-pencil-square me-1"></i> Submit Review
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-warning fw-semibold" href="/actuator/health" target="_blank" id="navHealthLink">
+                            <i class="bi bi-heart-pulse-fill me-1"></i> Health Probe
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="py-4 bg-white border-bottom shadow-sm mb-4">
+        <div class="container d-flex flex-wrap align-items-center justify-content-between">
+            <div>
+                <h2 class="fw-bold mb-1 text-dark" id="pageTitle">Review Operations & Moderation KPI Dashboard</h2>
+                <p class="text-muted mb-0 small">
+                    <span class="badge bg-secondary me-2">DevOps Lab B.E. Sem VII</span>
+                    Student: <strong class="text-dark">Rushikesh Gawade</strong> (Roll No: <strong>23102A0052</strong>) | Evaluator: <strong>Dr. Snehal Andhare</strong>
+                </p>
+            </div>
+            <div class="mt-3 mt-md-0">
+                <a href="/reviews/submit" class="btn btn-primary px-3 shadow-sm" id="btnQuickSubmit">
+                    <i class="bi bi-plus-circle me-1"></i> Submit New Review
+                </a>
+                <a href="/reviews" class="btn btn-outline-dark px-3 ms-2" id="btnQuickQueue">
+                    <i class="bi bi-table me-1"></i> Open Queue
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="container">
+        <!-- KPI Cards Row -->
+        <div class="row g-4 mb-4">
+            <!-- Total Reviews -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card kpi-card shadow-sm p-3 bg-white h-100 border-start border-4 border-primary">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <span class="text-muted text-uppercase fw-bold" style="font-size: 0.75rem;">Total Reviews</span>
+                            <h3 class="fw-bold my-1 text-dark" id="kpiTotalReviews" th:text="${metrics.totalReviews}">0</h3>
+                            <small class="text-muted">Lifetime Ingested</small>
+                        </div>
+                        <div class="p-3 bg-primary bg-opacity-10 text-primary rounded-circle">
+                            <i class="bi bi-chat-square-text-fill fs-4"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Queue -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card kpi-card shadow-sm p-3 bg-white h-100 border-start border-4 border-warning">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <span class="text-muted text-uppercase fw-bold" style="font-size: 0.75rem;">Pending Queue</span>
+                            <h3 class="fw-bold my-1 text-warning" id="kpiPendingReviews" th:text="${metrics.pendingReviews}">0</h3>
+                            <small class="text-muted">Requires Triage</small>
+                        </div>
+                        <div class="p-3 bg-warning bg-opacity-10 text-warning rounded-circle">
+                            <i class="bi bi-hourglass-split fs-4"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Approved Reviews -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card kpi-card shadow-sm p-3 bg-white h-100 border-start border-4 border-success">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <span class="text-muted text-uppercase fw-bold" style="font-size: 0.75rem;">Approved Reviews</span>
+                            <h3 class="fw-bold my-1 text-success" id="kpiApprovedReviews" th:text="${metrics.approvedReviews}">0</h3>
+                            <small class="text-muted">Publicly Published</small>
+                        </div>
+                        <div class="p-3 bg-success bg-opacity-10 text-success rounded-circle">
+                            <i class="bi bi-check-circle-fill fs-4"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Average Rating -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card kpi-card shadow-sm p-3 bg-white h-100 border-start border-4 border-info">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <span class="text-muted text-uppercase fw-bold" style="font-size: 0.75rem;">Average Rating</span>
+                            <h3 class="fw-bold my-1 text-info" id="kpiAvgRating">
+                                <span th:text="${metrics.averageRating}">0.0</span> <i class="bi bi-star-fill text-warning fs-5"></i>
+                            </h3>
+                            <small class="text-muted">Approved Feedback</small>
+                        </div>
+                        <div class="p-3 bg-info bg-opacity-10 text-info rounded-circle">
+                            <i class="bi bi-star-half fs-4"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Architecture & Verification Banner -->
+        <div class="card shadow-sm border-0 mb-4 bg-light">
+            <div class="card-body p-4">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <h5 class="fw-bold text-dark mb-2">
+                            <i class="bi bi-cpu text-primary me-2"></i>DevOps Platform Architecture Verification
+                        </h5>
+                        <p class="text-muted small mb-0">
+                            The platform is operating on <strong>Spring Boot 3.3.4</strong> with an <strong>Embedded In-Memory H2 Database</strong> and <strong>Spring Data JPA</strong>. Health telemetry is actively exposed at <code>/actuator/health</code>. All state changes are persisted in memory with zero external database dependencies for continuous integration stability.
+                        </p>
+                    </div>
+                    <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                        <span class="badge bg-success py-2 px-3 fs-6" id="badgeSystemHealth">
+                            <i class="bi bi-check-all me-1"></i> System Status: UP
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Reviews Table -->
+        <div class="card shadow-sm border-0 mb-5">
+            <div class="card-header bg-white py-3 d-flex align-items-center justify-content-between">
+                <h5 class="fw-bold mb-0 text-dark">
+                    <i class="bi bi-clock-history me-2 text-secondary"></i>Recent Feedback Ingestions
+                </h5>
+                <a href="/reviews" class="btn btn-sm btn-outline-primary" id="btnViewAllReviews">View All Reviews &rarr;</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" id="recentReviewsTable">
+                    <thead class="table-light text-muted small text-uppercase">
+                        <tr>
+                            <th>ID</th>
+                            <th>Product Name</th>
+                            <th>Reviewer</th>
+                            <th>Rating</th>
+                            <th>Review Title</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="r : ${recentReviews}">
+                            <td class="fw-bold text-muted" th:text="'#' + ${r.id}">#1</td>
+                            <td>
+                                <strong th:text="${r.productName}">Product Name</strong><br>
+                                <span class="badge bg-light text-dark border small" th:text="${r.productId}">PROD-101</span>
+                            </td>
+                            <td th:text="${r.reviewerName}">Reviewer Name</td>
+                            <td>
+                                <span class="star-rating">
+                                    <i th:each="i : ${#numbers.sequence(1, r.rating)}" class="bi bi-star-fill"></i>
+                                </span>
+                                <span class="small text-muted ms-1" th:text="'(' + ${r.rating} + '/5)'"></span>
+                            </td>
+                            <td th:text="${r.reviewTitle}">Review Title</td>
+                            <td>
+                                <span th:if="${r.status.name() == 'PENDING'}" class="badge badge-pending px-2 py-1">PENDING</span>
+                                <span th:if="${r.status.name() == 'APPROVED'}" class="badge badge-approved px-2 py-1">APPROVED</span>
+                                <span th:if="${r.status.name() == 'REJECTED'}" class="badge badge-rejected px-2 py-1">REJECTED</span>
+                                <span th:if="${r.status.name() == 'FLAGGED'}" class="badge badge-flagged px-2 py-1">FLAGGED</span>
+                            </td>
+                            <td>
+                                <a th:href="@{/reviews(query=${r.productName})}" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-arrow-right-circle"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-3 bg-white border-top text-center text-muted small">
+        <div class="container">
+            Git-Based Customer Review Moderation Portal | Student: Rushikesh Gawade (23102A0052) | DevOps Lab B.E. Semester VII
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
