@@ -1,0 +1,26 @@
+# Git Version Control
+.git/
+.gitignore
+
+# Maven and Build Outputs
+target/
+*.class
+
+# IDE and Editor Files
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# Documentation and Media Artifacts
+docs/
+screenshots/
+templates/
+
+# Temporary and Scratch Directories
+*.log
+tmp/
+scratch/
+cookie.txt
