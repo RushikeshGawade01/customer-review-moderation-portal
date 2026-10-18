@@ -200,14 +200,14 @@ public class ReviewPortalSeleniumTest extends BaseSeleniumTest {
 
         clickElement(approveBtn);
 
-        WebElement statusAlert = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("statusSuccessAlert")));
-        assertThat(statusAlert.getText()).contains("APPROVED");
-
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("statusSuccessAlert"), "APPROVED"));
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("statusBadge-" + reviewId), "APPROVED"));
         WebElement badgeApproved = driver.findElement(By.id("statusBadge-" + reviewId));
         assertThat(badgeApproved.getText()).isEqualTo("APPROVED");
         assertThat(badgeApproved.getAttribute("class")).contains("badge-approved");
 
-        // Locate any active review with an enabled Flag button
+        // Locate any active review with an enabled Flag button in the updated DOM
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("reviewsTable")));
         List<WebElement> flagButtons = driver.findElements(By.xpath("//button[contains(@id, 'flagBtn-') and not(@disabled)]"));
         assertThat(flagButtons).isNotEmpty();
         WebElement flagBtn = flagButtons.get(0);
@@ -216,7 +216,8 @@ public class ReviewPortalSeleniumTest extends BaseSeleniumTest {
 
         clickElement(flagBtn);
 
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("statusSuccessAlert")));
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("statusSuccessAlert"), "FLAGGED"));
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("statusBadge-" + flagReviewId), "FLAGGED"));
         WebElement badgeFlagged = driver.findElement(By.id("statusBadge-" + flagReviewId));
         assertThat(badgeFlagged.getText()).isEqualTo("FLAGGED");
         assertThat(badgeFlagged.getAttribute("class")).contains("badge-flagged");
