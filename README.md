@@ -10,7 +10,8 @@
 > **Roll Number:** 23102A0052  
 > **Program & Branch:** B.E. Semester VII – Computer Engineering  
 > **Subject In-charge / Evaluator:** Dr. Snehal Andhare  
-> **Repository:** `https://github.com/rushikesh-gawade/customer-review-moderation-portal.git`
+> **Repository:** `https://github.com/RushikeshGawade01/customer-review-moderation-portal.git`  
+> **Contact Email:** `gawaderushikesh576@gmail.com`
 
 ---
 

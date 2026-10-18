@@ -152,18 +152,19 @@ def generate_figure_4_2():
         ("  main", "#F1F5F9", False),
         ("", "#000000", False),
         ("PS D:\\Devops_project> git remote -v", "#38BDF8", True),
-        ("origin  https://github.com/rushikesh-gawade/customer-review-moderation-portal.git (fetch)", "#F1F5F9", False),
-        ("origin  https://github.com/rushikesh-gawade/customer-review-moderation-portal.git (push)", "#F1F5F9", False),
+        ("origin  https://github.com/RushikeshGawade01/customer-review-moderation-portal.git (fetch)", "#F1F5F9", False),
+        ("origin  https://github.com/RushikeshGawade01/customer-review-moderation-portal.git (push)", "#F1F5F9", False),
         ("", "#000000", False),
         ("PS D:\\Devops_project> git log --oneline --graph --decorate", "#38BDF8", True),
-        ("* b0d2ac9 (HEAD -> dev, main) docs: add completed laboratory task reports 1 through 3 and evidence", "#F59E0B", False),
+        ("* 5ec9813 (HEAD -> dev, origin/dev) chore: ignore README_FOR_FRIEND.txt", "#F59E0B", False),
+        ("* b0d2ac9 (origin/main, main) docs: add completed laboratory task reports 1 through 3 and evidence", "#F59E0B", False),
         ("* e202685 test: add automated Spring Boot tests for review moderation and health probe", "#F59E0B", False),
         ("* 37c04a4 feat: implement Spring Boot application skeleton and 4-tier architecture", "#F59E0B", False),
         ("* 17e071f docs: initialize project governance with README, .gitignore, and issue templates", "#F59E0B", False),
         ("", "#000000", False),
         ("PS D:\\Devops_project> git config --get user.name; git config --get user.email", "#38BDF8", True),
         ("Rushikesh Gawade", "#10B981", True),
-        ("rushikesh.gawade@student.univ.edu", "#10B981", True)
+        ("gawaderushikesh576@gmail.com", "#10B981", True)
     ]
 
     y_pos = 57.0

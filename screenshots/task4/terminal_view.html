@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  body {
+    margin: 0;
+    padding: 24px;
+    background-color: #0d1117;
+    font-family: 'Cascadia Code', 'Consolas', 'Courier New', monospace;
+    color: #c9d1d9;
+    font-size: 13.5px;
+    line-height: 1.45;
+  }
+  .window {
+    background: #161b22;
+    border-radius: 8px;
+    border: 1px solid #30363d;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.4);
+    overflow: hidden;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .titlebar {
+    background: #21262d;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #30363d;
+  }
+  .dots { display: flex; gap: 8px; margin-right: 16px; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+  .dot-red { background: #ff5f56; }
+  .dot-yellow { background: #ffbd2e; }
+  .dot-green { background: #27c93f; }
+  .title { color: #8b949e; font-size: 12px; font-weight: bold; }
+  .content { padding: 18px 22px; }
+  .prompt { color: #58a6ff; font-weight: bold; }
+  .cmd { color: #f0f6fc; font-weight: bold; }
+  .success { color: #3fb950; }
+  .highlight { color: #d29922; }
+  .branch { color: #f0883e; }
+  .muted { color: #8b949e; }
+  .line { margin-bottom: 2px; }
+</style>
+</head>
+<body>
+<div class="window">
+  <div class="titlebar">
+    <div class="dots">
+      <span class="dot dot-red"></span>
+      <span class="dot dot-yellow"></span>
+      <span class="dot dot-green"></span>
+    </div>
+    <div class="title">PowerShell 7.4 &mdash; Rushikesh Gawade (23102A0052) &mdash; Git Repository Baseline</div>
+  </div>
+  <div class="content">
+    <div class="line"><span class="prompt">PS D:\Devops_project&gt;</span> <span class="cmd">git config user.name "Rushikesh Gawade"</span></div>
+    <div class="line"><span class="prompt">PS D:\Devops_project&gt;</span> <span class="cmd">git config user.email "gawaderushikesh576@gmail.com"</span></div>
+    <div class="line"><span class="prompt">PS D:\Devops_project&gt;</span> <span class="cmd">git config --get user.name; git config --get user.email</span></div>
+    <div class="line success">Rushikesh Gawade</div>
+    <div class="line success">gawaderushikesh576@gmail.com</div>
+    <div class="line">&nbsp;</div>
+
+    <div class="line"><span class="prompt">PS D:\Devops_project&gt;</span> <span class="cmd">git remote add origin https://github.com/RushikeshGawade01/customer-review-moderation-portal.git</span></div>
+    <div class="line"><span class="prompt">PS D:\Devops_project&gt;</span> <span class="cmd">git remote -v</span></div>
+    <div class="line">origin  https://github.com/RushikeshGawade01/customer-review-moderation-portal.git (fetch)</div>
+    <div class="line">origin  https://github.com/RushikeshGawade01/customer-review-moderation-portal.git (push)</div>
+    <div class="line">&nbsp;</div>
+
+    <div class="line"><span class="prompt">PS D:\Devops_project&gt;</span> <span class="cmd">git push -u origin main</span></div>
+    <div class="line">branch 'main' set up to track 'origin/main'.</div>
+    <div class="line">To https://github.com/RushikeshGawade01/customer-review-moderation-portal.git</div>
+    <div class="line success"> * [new branch]      main -&gt; main</div>
+    <div class="line">&nbsp;</div>
+
+    <div class="line"><span class="prompt">PS D:\Devops_project&gt;</span> <span class="cmd">git push -u origin dev</span></div>
+    <div class="line">branch 'dev' set up to track 'origin/dev'.</div>
+    <div class="line">To https://github.com/RushikeshGawade01/customer-review-moderation-portal.git</div>
+    <div class="line success"> * [new branch]      dev -&gt; dev</div>
+    <div class="line">&nbsp;</div>
+
+    <div class="line"><span class="prompt">PS D:\Devops_project&gt;</span> <span class="cmd">git branch -a</span></div>
+    <div class="line success">* dev</div>
+    <div class="line">  main</div>
+    <div class="line branch">  remotes/origin/dev</div>
+    <div class="line branch">  remotes/origin/main</div>
+    <div class="line">&nbsp;</div>
+
+    <div class="line"><span class="prompt">PS D:\Devops_project&gt;</span> <span class="cmd">git log --graph --oneline --decorate -n 4</span></div>
+    <div class="line"><span class="highlight">* 5ec9813</span> (<span class="success">HEAD -&gt; dev</span>, <span class="branch">origin/dev</span>) chore: ignore README_FOR_FRIEND.txt</div>
+    <div class="line"><span class="highlight">* b0d2ac9</span> (<span class="success">origin/main</span>, <span class="branch">main</span>) docs: add completed laboratory task reports 1 through 3 and evidence</div>
+    <div class="line"><span class="highlight">* e202685</span> test: add automated Spring Boot tests for review moderation and health probe</div>
+    <div class="line"><span class="highlight">* 37c04a4</span> feat: implement Spring Boot application skeleton and 4-tier architecture</div>
+    <div class="line"><span class="highlight">* 17e071f</span> docs: initialize project governance with README, .gitignore, and issue templates</div>
+  </div>
+</div>
+</body>
+</html>

@@ -235,10 +235,10 @@ def generate_task4_document():
         
     meta_data = [
         ("Project Name", "customer-review-moderation-portal", "Official application artifact identifier."),
-        ("Repository URL", "https://github.com/rushikesh-gawade/customer-review-moderation-portal.git", "Remote Git hosting & CI/CD trigger webhook endpoint."),
+        ("Repository URL", "https://github.com/RushikeshGawade01/customer-review-moderation-portal.git", "Remote Git hosting & CI/CD trigger webhook endpoint."),
         ("Git Version", "git version 2.51.0.windows.1", "Standard distributed version control CLI engine."),
         ("Configured Author", "Rushikesh Gawade", "Enforces commit author authenticity and academic audit trail."),
-        ("Author Email", "rushikesh.gawade@student.univ.edu", "Associated institutional email for signed commit verification."),
+        ("Author Email", "gawaderushikesh576@gmail.com", "Associated primary email for signed commit verification."),
         ("Default Head Branch", "dev (Integration) / main (Protected Production)", "Enforces dual-branch integration baseline preventing direct main pushes.")
     ]
     for r_idx, row_vals in enumerate(meta_data, start=1):
@@ -370,13 +370,20 @@ def generate_task4_document():
 
     # Section 7: Live Terminal Verification Evidence
     add_heading(body_cell, "Live terminal repository verification evidence", keep_with_next=True)
-    add_body_p(body_cell, "The initialized repository was verified live through standard Git CLI commands on PowerShell. The terminal capture confirms clean working tree status, branch tracking, remote URL configuration, and commit log integrity:")
+    add_body_p(body_cell, "The repository was initialized and pushed live to GitHub at https://github.com/RushikeshGawade01/customer-review-moderation-portal. The browser and terminal captures confirm clean working tree status, remote tracking, dual-branch push to main and dev, and commit log integrity:")
 
-    # Figure 4.2: Terminal Log
-    fig2_path = os.path.join(base_dir, "screenshots", "task4", "figure_4_2_git_terminal_log.png")
+    # Figure 4.2: Live GitHub Repository
+    fig2_path = os.path.join(base_dir, "screenshots", "task4", "github_repo_live.png")
     if os.path.exists(fig2_path):
         add_figure(body_cell, fig2_path, 
-                   "Figure 4.2: Terminal Git Log & Repository Initialization Verification (PowerShell Live Execution)", 
+                   "Figure 4.2: Verified Live GitHub Repository (https://github.com/RushikeshGawade01/customer-review-moderation-portal)", 
+                   width_inches=5.4)
+
+    # Figure 4.3: Real Terminal Execution
+    fig3_path = os.path.join(base_dir, "screenshots", "task4", "git_terminal_live.png")
+    if os.path.exists(fig3_path):
+        add_figure(body_cell, fig3_path, 
+                   "Figure 4.3: Real PowerShell Session Execution (Git User, Remotes, Push to GitHub, and Commit Log)", 
                    width_inches=5.4)
 
     # Row 4: Conclusion (Academic Summary)

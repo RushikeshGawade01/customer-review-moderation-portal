@@ -3,7 +3,7 @@ name: Bug Report
 about: Create a report to help us improve the Customer Review Moderation Portal
 title: "[BUG] "
 labels: bug, triage
-assignees: rushikesh-gawade
+assignees: RushikeshGawade01
 ---
 
 **Describe the Bug**
