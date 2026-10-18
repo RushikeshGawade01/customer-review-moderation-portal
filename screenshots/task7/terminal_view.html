@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  body {
+    margin: 0;
+    padding: 20px;
+    background-color: #0d1117;
+    font-family: 'Cascadia Code', 'Consolas', 'Courier New', monospace;
+    color: #c9d1d9;
+    font-size: 12.8px;
+    line-height: 1.40;
+  }
+  .window {
+    background: #161b22;
+    border-radius: 8px;
+    border: 1px solid #30363d;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.4);
+    overflow: hidden;
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+  .titlebar {
+    background: #21262d;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #30363d;
+  }
+  .dots { display: flex; gap: 8px; margin-right: 16px; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+  .dot-red { background: #ff5f56; }
+  .dot-yellow { background: #ffbd2e; }
+  .dot-green { background: #27c93f; }
+  .title { color: #8b949e; font-size: 12px; font-weight: bold; }
+  .content { padding: 16px 20px; }
+  .prompt { color: #58a6ff; font-weight: bold; }
+  .cmd { color: #f0f6fc; font-weight: bold; }
+  .success { color: #3fb950; }
+  .highlight { color: #d29922; }
+  .branch { color: #f0883e; }
+  .muted { color: #8b949e; }
+  .line { margin-bottom: 2px; }
+</style>
+</head>
+<body>
+<div class="window">
+  <div class="titlebar">
+    <div class="dots">
+      <span class="dot dot-red"></span>
+      <span class="dot dot-yellow"></span>
+      <span class="dot dot-green"></span>
+    </div>
+    <div class="title">PowerShell 7.4 &mdash; Rushikesh Gawade (23102A0052) &mdash; Task 7 Jenkins CI Server & Maven Build Job</div>
+  </div>
+  <div class="content">
+    <div class="line"><span class="prompt">PS D:\Devops_project&gt;</span> <span class="cmd">java "-Djenkins.install.runSetupWizard=false" -jar D:\jenkins.war --httpPort=8085</span></div>
+    <div class="line">2026-10-18 13:43:31.755 [id=1]  INFO  winstone.Logger#logInternal: Winstone Servlet Engine running: controlPort=disabled</div>
+    <div class="line">2026-10-18 13:43:34.082 [id=52] <span class="success">INFO  hudson.lifecycle.Lifecycle#onReady: Jenkins is fully up and running</span></div>
+    <div class="line">&nbsp;</div>
+
+    <div class="line"><span class="prompt">PS D:\Devops_project&gt;</span> <span class="cmd">Invoke-RestMethod -Uri "http://localhost:8085/api/json" | Select-Object -ExpandProperty jobs</span></div>
+    <div class="line">_class                        name          url                                      color</div>
+    <div class="line">------                        ----          ---                                      -----</div>
+    <div class="line success">hudson.model.FreeStyleProject CRMP-Maven-CI http://localhost:8085/job/CRMP-Maven-CI/ blue</div>
+    <div class="line">&nbsp;</div>
+
+    <div class="line"><span class="prompt">PS D:\Devops_project&gt;</span> <span class="cmd">Invoke-WebRequest -Uri "http://localhost:8085/job/CRMP-Maven-CI/build" -Method Post</span></div>
+    <div class="line success">StatusCode        : 201 Created (Build #1 successfully queued and executed)</div>
+    <div class="line">&nbsp;</div>
+
+    <div class="line"><span class="prompt">PS D:\Devops_project&gt;</span> <span class="cmd">Invoke-RestMethod -Uri "http://localhost:8085/job/CRMP-Maven-CI/1/api/json"</span></div>
+    <div class="line">number    : 1</div>
+    <div class="line success">result    : SUCCESS</div>
+    <div class="line">duration  : 40861 ms (40.8 s)</div>
+    <div class="line">timestamp : 1792331146998</div>
+    <div class="line highlight">artifact  : target/customer-review-moderation-portal-1.0.0-SNAPSHOT.jar</div>
+    <div class="line">&nbsp;</div>
+
+    <div class="line"><span class="prompt">PS D:\Devops_project&gt;</span> <span class="cmd">Get-ChildItem -Path "D:\jenkins_home\jobs\CRMP-Maven-CI\builds\1\archive\target"</span></div>
+    <div class="line">    Directory: D:\jenkins_home\jobs\CRMP-Maven-CI\builds\1\archive\target</div>
+    <div class="line">Mode                 LastWriteTime         Length Name</div>
+    <div class="line">----                 -------------         ------ ----</div>
+    <div class="line success">-a----        18-10-2026     19:16       53041757 customer-review-moderation-portal-1.0.0-SNAPSHOT.jar</div>
+    <div class="line">&nbsp;</div>
+
+    <div class="line"><span class="prompt">PS D:\Devops_project&gt;</span> <span class="cmd"># [Surefire Test Quality Gate: 10/10 Tests Passed, 0 Failures, 0 Errors, BUILD SUCCESS]</span></div>
+  </div>
+</div>
+</body>
+</html>
